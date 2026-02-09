@@ -495,55 +495,70 @@
             const hiddenMessage = document.getElementById('hiddenMessage');
             const wordScreen = document.getElementById('wordScreen');
             const hideHint = document.getElementById('hideHint');
+            const playerWord = document.querySelector('.player-word');
 
-            // Mostrar: al tocar/cliquear en la pantalla de palabra, si está oculta
-            wordScreen.addEventListener('touchstart', function(e) {
+            // Mostrar: un único toque/clic en el cuadro de palabra cuando esté oculta
+            playerWord.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 if (wordDisplay.style.display !== 'block') showWord();
             });
-            wordScreen.addEventListener('mousedown', function(e) {
+            playerWord.addEventListener('click', function(e) {
                 if (wordDisplay.style.display !== 'block') showWord();
             });
 
-            // Ocultar: solo si el usuario vuelve a presionar dentro del cuadro de la palabra.
-            wordDisplay.addEventListener('touchstart', function(e) {
+            // Ocultar: un único toque/clic dentro del wordDisplay cuando esté visible
+            wordDisplay.addEventListener('touchend', function(e) {
+                e.preventDefault();
                 e.stopPropagation();
-                if (wordDisplay.style.display === 'block') hideWord();
+                hideWord();
             });
-            wordDisplay.addEventListener('mousedown', function(e) {
+            wordDisplay.addEventListener('click', function(e) {
                 e.stopPropagation();
-                if (wordDisplay.style.display === 'block') hideWord();
+                hideWord();
             });
 
-            function showWord() {
-                clearTimeout(revealTimer);
-                hiddenMessage.style.display = 'none';
-                wordDisplay.style.display = 'block';
-                hideHint.style.display = 'block'; // mostrar hint
+             function showWord() {
+                 clearTimeout(revealTimer);
+                 hiddenMessage.style.display = 'none';
+                 wordDisplay.style.display = 'block';
+                 hideHint.style.display = 'block'; // mostrar hint
 
-                // Mostrar el botón correspondiente
-                if (gameState.currentPlayerIndex < gameState.players.length - 1) {
-                    document.getElementById('nextPlayerBtn').style.display = 'inline-block';
-                    document.getElementById('finishWordsBtn').style.display = 'none';
-                } else {
-                    document.getElementById('nextPlayerBtn').style.display = 'none';
-                    document.getElementById('finishWordsBtn').style.display = 'inline-block';
-                }
+                 // Mostrar el botón correspondiente
+                 if (gameState.currentPlayerIndex < gameState.players.length - 1) {
+                     document.getElementById('nextPlayerBtn').style.display = 'inline-block';
+                     document.getElementById('nextPlayerBtn').disabled = true;
+                     document.getElementById('finishWordsBtn').style.display = 'none';
+                     document.getElementById('finishWordsBtn').disabled = true;
+                 } else {
+                     document.getElementById('nextPlayerBtn').style.display = 'none';
+                     document.getElementById('nextPlayerBtn').disabled = true;
+                     document.getElementById('finishWordsBtn').style.display = 'inline-block';
+                     document.getElementById('finishWordsBtn').disabled = true;
+                 }
 
-                // Ocultar automáticamente tras revealSeconds (5s por defecto)
-                revealTimer = setTimeout(hideWord, revealSeconds * 1000);
-            }
+                 // Ocultar automáticamente tras revealSeconds (5s por defecto)
+                 revealTimer = setTimeout(hideWord, revealSeconds * 1000);
+             }
 
-            function hideWord() {
-                clearTimeout(revealTimer);
-                wordDisplay.style.display = 'none';
-                hiddenMessage.style.display = 'block';
-                hideHint.style.display = 'none'; // ocultar hint
-            }
+             function hideWord() {
+                 clearTimeout(revealTimer);
+                 wordDisplay.style.display = 'none';
+                 hiddenMessage.style.display = 'block';
+                 hideHint.style.display = 'none'; // ocultar hint
 
-            // Inicializar jugadores y categorías
-            initializePlayers();
-            initializeCategories();
+                 const nextBtn = document.getElementById('nextPlayerBtn');
+                 const finishBtn = document.getElementById('finishWordsBtn');
+                 // Habilitar el botón correcto cuando la palabra ya esté oculta
+                 if (gameState.currentPlayerIndex < gameState.players.length - 1) {
+                     nextBtn.disabled = false;
+                 } else {
+                     finishBtn.disabled = false;
+                 }
+             }
+
+             // Inicializar jugadores y categorías
+             initializePlayers();
+             initializeCategories();
         });
 
         // Funciones para cambiar entre pantallas
@@ -558,6 +573,8 @@
 
         function showCategoryScreen() {
             changeScreen('category');
+            // Actualizar límite de impostores al entrar en la pantalla de categorías
+            updateImpostorLimit();
         }
 
         function showWordScreen() {
@@ -648,6 +665,42 @@
         }
 
         // Funciones para la pantalla de categorías
+        function updateImpostorLimit() {
+            const playerCount = gameState.players.length;
+            const impostorCountSelect = document.getElementById('impostorCount');
+            const currentImpostorCount = parseInt(impostorCountSelect.value);
+            
+            // Reglas específicas por número de jugadores
+            let maxImpostors = 1;
+            if (playerCount === 3) {
+                maxImpostors = 1; // 3 jugadores: solo 1 impostor
+            } else if (playerCount === 4) {
+                maxImpostors = 2; // 4 jugadores: máximo 2 impostores
+            } else {
+                maxImpostors = 3; // 5+ jugadores: máximo 3 impostores
+            }
+             
+             // Limpiar opciones anteriores
+             impostorCountSelect.innerHTML = '';
+             
+             // Agregar opciones dinámicamente
+             for (let i = 1; i <= maxImpostors; i++) {
+                 const option = document.createElement('option');
+                 option.value = i;
+                 option.textContent = i === 1 ? '1 impostor' : `${i} impostores`;
+                 impostorCountSelect.appendChild(option);
+             }
+             
+             // Seleccionar la opción que estaba antes si sigue siendo válida, sino la primera
+             if (currentImpostorCount <= maxImpostors) {
+                 impostorCountSelect.value = currentImpostorCount;
+             } else {
+                 impostorCountSelect.value = Math.min(2, maxImpostors);
+             }
+             
+             gameState.impostorCount = parseInt(impostorCountSelect.value);
+         }
+
         function initializeCategories() {
             const categoryOptions = document.getElementById('categoryOptions');
             categoryOptions.innerHTML = '';
@@ -677,7 +730,9 @@
             document.querySelector('.category-option').classList.add('selected');
             gameState.category = document.querySelector('.category-option').getAttribute('data-category');
             
-            // Configurar el número de impostores
+            // Configurar el número de impostores con límite dinámico
+            updateImpostorLimit();
+            
             const impostorCountSelect = document.getElementById('impostorCount');
             impostorCountSelect.addEventListener('change', function() {
                 gameState.impostorCount = parseInt(this.value);
@@ -700,7 +755,7 @@
                 return;
             }
             
-            // Validar que no haya más impostores que jugadores
+            // Validar que no haya más impostores que lo permitido
             if (gameState.impostorCount >= gameState.players.length) {
                 alert('No puede haber más impostores que jugadores');
                 return;
