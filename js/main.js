@@ -1,6 +1,7 @@
-// main.js - Inicialización del juego
+﻿// main.js - Inicializacion del juego
 
-// Inicializar el juego cuando la página carga
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeCategories();
+    updatePlayerList();
+    showScreen('menuScreen');
 });

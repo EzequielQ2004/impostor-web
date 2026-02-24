@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,64 +8,113 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎭 Juego del Impostor</h1>
-        
-        <!-- Pantalla de configuración -->
-        <div id="setupScreen" class="screen active">
-            <h2>Configurar Jugadores</h2>
-            
+        <h1>Juego del Impostor</h1>
+
+        <!-- Pantalla inicial -->
+        <div id="menuScreen" class="screen active">
+            <h2>Menu Inicial</h2>
+            <p class="intro-text">Prepara la partida y descubre quien es el impostor.</p>
+            <div class="menu-actions">
+                <button class="btn btn-success" onclick="goToPlayerSetup()">Empezar Juego</button>
+                <button class="btn" onclick="showRulesScreen()">Como Jugar</button>
+            </div>
+        </div>
+
+        <!-- Pantalla de reglas -->
+        <div id="rulesScreen" class="screen">
+            <h2>Reglas del Juego</h2>
+            <div class="rules-box">
+                <p>1. Todos reciben una palabra secreta, excepto los impostores.</p>
+                <p>2. Cada jugador dice una pista sobre su palabra sin decirla directamente.</p>
+                <p>3. El impostor debe improvisar para no ser descubierto.</p>
+                <p>4. Al final, el grupo vota quien cree que es el impostor.</p>
+                <p>5. Si descubren al impostor, ganan los civiles; si no, gana el impostor.</p>
+            </div>
+            <div class="menu-actions">
+                <button class="btn" onclick="showScreen('menuScreen')">Volver al Menu</button>
+                <button class="btn btn-success" onclick="goToPlayerSetup()">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Paso 1: Jugadores -->
+        <div id="playerSetupScreen" class="screen">
+            <h2>Paso 1: Configurar Jugadores</h2>
+
             <div class="form-group">
                 <label for="playerName">Nombre del jugador:</label>
                 <input type="text" id="playerName" placeholder="Ingresa un nombre">
             </div>
-            
+
             <button class="btn btn-success" onclick="addPlayer()">Agregar Jugador</button>
-            
+
             <h3>Jugadores agregados:</h3>
             <div class="player-list" id="playerList">
                 <p style="text-align: center; color: #666;">No hay jugadores agregados</p>
             </div>
-            
-            <h3>Selecciona una categoría:</h3>
+
+            <div class="step-actions">
+                <button class="btn" onclick="showScreen('menuScreen')">Volver al Menu</button>
+                <button class="btn btn-success" onclick="goToCategorySetup()">Siguiente: Categoria</button>
+            </div>
+        </div>
+
+        <!-- Paso 2: Categoria -->
+        <div id="categorySetupScreen" class="screen">
+            <h2>Paso 2: Elegir Categoria</h2>
+
+            <h3>Selecciona una categoria:</h3>
             <div class="category-options" id="categoryOptions"></div>
-            
+
+            <div class="step-actions">
+                <button class="btn" onclick="showScreen('playerSetupScreen')">Atras</button>
+                <button class="btn btn-success" onclick="goToImpostorSetup()">Siguiente: Impostores</button>
+            </div>
+        </div>
+
+        <!-- Paso 3: Impostores -->
+        <div id="impostorSetupScreen" class="screen">
+            <h2>Paso 3: Cantidad de Impostores</h2>
+
             <div class="form-group">
-                <label for="impostorCount">Número de impostores:</label>
+                <label for="impostorCount">Numero de impostores:</label>
                 <select id="impostorCount">
                     <option value="1">1 impostor</option>
                     <option value="2">2 impostores</option>
                 </select>
             </div>
-            
-            <button class="btn" onclick="startGame()">Iniciar Juego</button>
+
+            <div class="step-actions">
+                <button class="btn" onclick="showScreen('categorySetupScreen')">Atras</button>
+                <button class="btn btn-success" onclick="startGame()">Empezar Partida</button>
+            </div>
         </div>
-        
+
         <!-- Pantalla de palabras -->
         <div id="wordScreen" class="screen">
             <h2 id="currentPlayerName">Turno de: Jugador</h2>
-            
+
             <div id="hiddenMessage" class="hidden-message">
                 <p>Pasa el dispositivo a este jugador</p>
                 <button class="btn" onclick="revealWord()">Ver mi palabra</button>
             </div>
-            
+
             <div id="wordDisplay" class="player-word" style="display: none;">
                 <div class="player-name" id="displayPlayerName">Jugador</div>
                 <div class="word" id="wordText">PALABRA</div>
                 <div id="impostorIndicator"></div>
             </div>
-            
+
             <button id="nextPlayerBtn" class="btn" style="display: none;" onclick="showNextPlayerWord()">Siguiente Jugador</button>
             <button id="finishWordsBtn" class="btn btn-success" style="display: none;" onclick="showOrderScreen()">Continuar al Juego</button>
         </div>
-        
+
         <!-- Pantalla de orden -->
         <div id="orderScreen" class="screen">
-            <h2>Orden de Participación</h2>
-            <p>Los jugadores hablarán en el siguiente orden:</p>
-            
+            <h2>Orden de Participacion</h2>
+            <p>Los jugadores hablaran en el siguiente orden:</p>
+
             <div class="order-list" id="orderList"></div>
-            
+
             <div style="margin-top: 20px;">
                 <button class="btn" onclick="revealSecrets()">Revelar Secretos</button>
                 <button class="btn btn-danger" onclick="resetGame()">Nuevo Juego</button>
@@ -73,7 +122,6 @@
         </div>
     </div>
 
-    <!-- Scripts modulares -->
     <script src="js/data.js"></script>
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>

@@ -1,128 +1,144 @@
-// ui.js - Funciones de interfaz de usuario
+﻿// ui.js - Funciones de interfaz de usuario
 
-// Función para cambiar entre pantallas
 function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(screen => {
+    document.querySelectorAll('.screen').forEach((screen) => {
         screen.classList.remove('active');
     });
     document.getElementById(screenId).classList.add('active');
 }
 
-// Función para actualizar la lista de jugadores en la UI
+function showRulesScreen() {
+    showScreen('rulesScreen');
+}
+
+function goToPlayerSetup() {
+    showScreen('playerSetupScreen');
+    document.getElementById('playerName').focus();
+}
+
+function goToCategorySetup() {
+    if (gameState.players.length < 3) {
+        alert('Debe haber al menos 3 jugadores para continuar.');
+        return;
+    }
+
+    showScreen('categorySetupScreen');
+}
+
+function goToImpostorSetup() {
+    if (!gameState.category) {
+        alert('Por favor, selecciona una categoria.');
+        return;
+    }
+
+    showScreen('impostorSetupScreen');
+}
+
 function updatePlayerList() {
     const playerListDiv = document.getElementById('playerList');
-    
+
     if (gameState.players.length === 0) {
         playerListDiv.innerHTML = '<p style="text-align: center; color: #666;">No hay jugadores agregados</p>';
         return;
     }
-    
+
     playerListDiv.innerHTML = '';
-    
+
     gameState.players.forEach((player, index) => {
         const playerItem = document.createElement('div');
         playerItem.className = 'player-item';
-        
+
         const playerName = document.createElement('span');
         playerName.textContent = player;
-        
+
         const removeBtn = document.createElement('button');
         removeBtn.textContent = 'Eliminar';
         removeBtn.className = 'btn btn-danger';
         removeBtn.style.padding = '6px 12px';
         removeBtn.style.fontSize = '14px';
         removeBtn.onclick = () => removePlayer(index);
-        
+
         playerItem.appendChild(playerName);
         playerItem.appendChild(removeBtn);
         playerListDiv.appendChild(playerItem);
     });
 }
 
-// Función para actualizar el límite de impostores según cantidad de jugadores
 function updateImpostorLimit() {
     const impostorCountSelect = document.getElementById('impostorCount');
-    const currentImpostorCount = parseInt(impostorCountSelect.value);
+    const currentImpostorCount = parseInt(impostorCountSelect.value, 10) || 1;
     const playerCount = gameState.players.length;
-    
+
     let maxImpostors = 1;
-    
+
     if (playerCount >= 5) {
-        maxImpostors = 3; // 5+ jugadores: máximo 3 impostores
+        maxImpostors = 3;
     } else if (playerCount >= 4) {
-        maxImpostors = 2; // 4 jugadores: máximo 2 impostores
+        maxImpostors = 2;
     }
-    
-    // Limpiar opciones anteriores
+
     impostorCountSelect.innerHTML = '';
-    
-    // Agregar opciones dinámicamente
+
     for (let i = 1; i <= maxImpostors; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = i === 1 ? '1 impostor' : `${i} impostores`;
         impostorCountSelect.appendChild(option);
     }
-    
-    // Seleccionar la opción que estaba antes si sigue siendo válida, sino la primera
+
     if (currentImpostorCount <= maxImpostors) {
-        impostorCountSelect.value = currentImpostorCount;
+        impostorCountSelect.value = String(currentImpostorCount);
     } else {
-        impostorCountSelect.value = Math.min(2, maxImpostors);
+        impostorCountSelect.value = String(Math.min(2, maxImpostors));
     }
-    
-    gameState.impostorCount = parseInt(impostorCountSelect.value);
+
+    gameState.impostorCount = parseInt(impostorCountSelect.value, 10);
 }
 
-// Función para inicializar las categorías
 function initializeCategories() {
     const categoryOptions = document.getElementById('categoryOptions');
     categoryOptions.innerHTML = '';
-    
-    // Crear opciones para cada categoría
+
     for (const category in categories) {
         const option = document.createElement('div');
         option.className = 'category-option';
         option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
         option.setAttribute('data-category', category);
-        
-        option.addEventListener('click', function() {
-            // Deseleccionar todas las opciones
-            document.querySelectorAll('.category-option').forEach(opt => {
+
+        option.addEventListener('click', function () {
+            document.querySelectorAll('.category-option').forEach((opt) => {
                 opt.classList.remove('selected');
             });
-            
-            // Seleccionar esta opción
+
             this.classList.add('selected');
             gameState.category = this.getAttribute('data-category');
         });
-        
+
         categoryOptions.appendChild(option);
     }
-    
-    // Seleccionar la primera categoría por defecto
-    document.querySelector('.category-option').classList.add('selected');
-    gameState.category = document.querySelector('.category-option').getAttribute('data-category');
-    
-    // Configurar el número de impostores con límite dinámico
+
+    const firstOption = document.querySelector('.category-option');
+    if (firstOption) {
+        firstOption.classList.add('selected');
+        gameState.category = firstOption.getAttribute('data-category');
+    }
+
     updateImpostorLimit();
-    
+
     const impostorCountSelect = document.getElementById('impostorCount');
-    impostorCountSelect.addEventListener('change', function() {
-        gameState.impostorCount = parseInt(this.value);
+    impostorCountSelect.addEventListener('change', function () {
+        gameState.impostorCount = parseInt(this.value, 10);
     });
-    
-    gameState.impostorCount = parseInt(impostorCountSelect.value);
+
+    gameState.impostorCount = parseInt(impostorCountSelect.value, 10);
 }
 
-// Funciones para la pantalla de palabras
 function showWordScreen() {
     showScreen('wordScreen');
     showCurrentPlayerWord();
 }
 
 function resetWordScreen() {
-    // Limpiar cualquier timer pendiente y reset visual
     if (typeof revealTimer !== 'undefined' && revealTimer !== null) {
         clearTimeout(revealTimer);
         revealTimer = null;
@@ -136,15 +152,14 @@ function resetWordScreen() {
 function showCurrentPlayerWord() {
     const playerName = gameState.players[gameState.currentPlayerIndex];
     const word = gameState.words[gameState.currentPlayerIndex];
-    
+
     document.getElementById('currentPlayerName').textContent = `Turno de: ${playerName}`;
     document.getElementById('displayPlayerName').textContent = playerName;
     document.getElementById('wordText').textContent = word;
-    
-    // Mostrar indicador si es impostor
+
     const impostorIndicator = document.getElementById('impostorIndicator');
     if (word === 'IMPOSTOR') {
-        impostorIndicator.innerHTML = '<div class="impostor-label">¡Eres el impostor!</div>';
+        impostorIndicator.innerHTML = '<div class="impostor-label">Eres el impostor</div>';
     } else {
         impostorIndicator.innerHTML = '';
     }
@@ -155,8 +170,7 @@ let revealTimer = null;
 function revealWord() {
     document.getElementById('hiddenMessage').style.display = 'none';
     document.getElementById('wordDisplay').style.display = 'flex';
-    
-    // Mostrar el botón apropiado después de 3 segundos
+
     revealTimer = setTimeout(() => {
         if (gameState.currentPlayerIndex < gameState.players.length - 1) {
             document.getElementById('nextPlayerBtn').style.display = 'inline-block';
@@ -168,14 +182,13 @@ function revealWord() {
 
 function showNextPlayerWord() {
     gameState.currentPlayerIndex++;
-    
+
     if (gameState.currentPlayerIndex < gameState.players.length) {
         resetWordScreen();
         showCurrentPlayerWord();
     }
 }
 
-// Funciones para la pantalla de orden
 function showOrderScreen() {
     generatePlayerOrder();
     displayOrder();
@@ -185,17 +198,16 @@ function showOrderScreen() {
 function displayOrder() {
     const orderList = document.getElementById('orderList');
     orderList.innerHTML = '';
-    
+
     gameState.playerOrder.forEach((playerIndex, orderIndex) => {
         const playerName = gameState.players[playerIndex];
         const isImpostor = gameState.impostors.includes(playerIndex);
         const playerWord = gameState.words[playerIndex] || '';
-        
+
         const orderItem = document.createElement('div');
         orderItem.className = 'order-item';
-        
+
         if (gameState.secretsRevealed) {
-            // Mostrar nombre + palabra y marcar impostor
             orderItem.innerHTML = `
                 <div class="order-number">${orderIndex + 1}</div>
                 <div>
@@ -205,13 +217,12 @@ function displayOrder() {
                 </div>
             `;
         } else {
-            // Solo mostrar el orden y el nombre sin revelar nada
             orderItem.innerHTML = `
                 <div class="order-number">${orderIndex + 1}</div>
                 <div>${playerName}</div>
             `;
         }
-        
+
         orderList.appendChild(orderItem);
     });
 }

@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -94,7 +94,8 @@ label {
     font-weight: bold;
 }
 
-input, select {
+input,
+select {
     width: 100%;
     padding: 12px;
     border-radius: 8px;
@@ -104,9 +105,40 @@ input, select {
     font-size: 16px;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     outline: none;
     border-color: #2196f3;
+}
+
+.intro-text {
+    font-size: 18px;
+    color: #ffd54f;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.menu-actions,
+.step-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rules-box {
+    background-color: #222;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.rules-box p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.rules-box p:last-child {
+    margin-bottom: 0;
 }
 
 .player-list {
@@ -245,27 +277,38 @@ input:focus, select:focus {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 20px;
     }
-    
+
     h1 {
         font-size: 24px;
     }
-    
+
     .word {
         font-size: 32px;
     }
-    
+
     .category-option {
         flex: 1 1 100%;
+    }
+
+    .menu-actions,
+    .step-actions {
+        flex-direction: column;
+    }
+
+    .menu-actions .btn,
+    .step-actions .btn {
+        width: 100%;
+        margin: 5px 0;
     }
 }
