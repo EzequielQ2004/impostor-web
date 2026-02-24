@@ -35,7 +35,8 @@ body {
 }
 
 .game-logo {
-    width: min(92vw, 520px);
+    width: 100%;
+    max-width: 520px;
     height: auto;
     display: block;
     user-select: none;
@@ -319,7 +320,7 @@ select:focus {
     }
 
     .game-logo {
-        width: min(94vw, 420px);
+        max-width: 420px;
     }
 
     .container {
