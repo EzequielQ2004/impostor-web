@@ -30,5 +30,20 @@ const categories = {
         'playa', 'montaña', 'ciudad', 'campo', 'bosque', 
         'desierto', 'isla', 'río', 'lago', 'parque',
         'museo', 'teatro', 'hospital', 'escuela', 'mercado'
+    ],
+    peliculas: [
+        'titanic', 'avatar', 'star wars', 'the godfather', 'jurassic park',
+        'harry potter', 'the dark knight', 'inception', 'forrest gump', 'the matrix',
+        'pulp fiction', 'the avengers', 'toy story', 'pirates of the caribbean', 'the lion king'
+    ],
+    series: [
+        'breaking bad', 'game of thrones', 'stranger things', 'friends', 'the office',
+        'sherlock', 'the crown', 'narcos', 'the walking dead', 'westworld',
+        'money heist', 'the simpsons', 'seinfeld', 'black mirror', 'chernobyl'
+    ],
+    animes: [
+        'naruto', 'one piece', 'dragon ball', 'attack on titan', 'my hero academia',
+        'death note', 'fullmetal alchemist', 'sword art online', 'demon slayer', 'tokyo ghoul',
+        'bleach', 'one punch man', 'pokemon', 'hunter x hunter', 'cowboy bebop'
     ]
 };
