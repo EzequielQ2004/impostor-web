@@ -83,7 +83,11 @@ function prepareGame() {
         }
     }
 
-    gameState.playerOrder = [...allIndexes];
+    gameState.playerOrder = Array.from({ length: playersCount }, (_, i) => i);
+    for (let i = gameState.playerOrder.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [gameState.playerOrder[i], gameState.playerOrder[j]] = [gameState.playerOrder[j], gameState.playerOrder[i]];
+    }
 }
 
 function generatePlayerOrder() {
