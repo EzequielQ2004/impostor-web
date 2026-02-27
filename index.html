@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego del Impostor</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <header class="logo-bar">
         <img class="game-logo" src="assets/logo.png" alt="Impostor Web" width="520" height="193">
@@ -106,8 +108,10 @@
                 <div id="impostorIndicator"></div>
             </div>
 
-            <button id="nextPlayerBtn" class="btn" style="display: none;" onclick="showNextPlayerWord()">Siguiente Jugador</button>
-            <button id="finishWordsBtn" class="btn btn-success" style="display: none;" onclick="showOrderScreen()">Continuar al Juego</button>
+            <button id="nextPlayerBtn" class="btn" style="display: none;" onclick="showNextPlayerWord()">Siguiente
+                Jugador</button>
+            <button id="finishWordsBtn" class="btn btn-success" style="display: none;"
+                onclick="showOrderScreen()">Continuar al Juego</button>
         </div>
 
         <!-- Pantalla de orden -->
@@ -119,7 +123,8 @@
 
             <div style="margin-top: 20px;">
                 <button class="btn" onclick="revealSecrets()">Revelar Secretos</button>
-                <button class="btn btn-danger" onclick="resetGame()">Nuevo Juego</button>
+                <button class="btn btn-success" onclick="playAgain()" style="margin-top: 10px;">Jugar de Nuevo</button>
+                <button class="btn btn-danger" onclick="resetGame()" style="margin-top: 10px;">Salir al Menu</button>
             </div>
         </div>
     </div>
@@ -130,4 +135,5 @@
     <script src="js/game.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>

@@ -102,6 +102,39 @@ function generatePlayerOrder() {
     }
 }
 
+function playAgain() {
+    gameState.currentPlayerIndex = 0;
+    gameState.impostors = [];
+    gameState.words = [];
+    gameState.playerOrder = [];
+    gameState.secretsRevealed = false;
+
+    // Ensure the player list is up to date visually, although it should be already
+    updatePlayerList();
+
+    // Ensure the saved category visually selected
+    if (gameState.category) {
+        document.querySelectorAll('.category-option').forEach((opt) => {
+            if (opt.getAttribute('data-category') === gameState.category) {
+                opt.classList.add('selected');
+            } else {
+                opt.classList.remove('selected');
+            }
+        });
+    }
+
+    // Ensure impostor limit is up to date based on players
+    const previousCount = gameState.impostorCount;
+    updateImpostorLimit();
+    const impostorSelect = document.getElementById('impostorCount');
+    if ([...impostorSelect.options].some(opt => opt.value === String(previousCount))) {
+        impostorSelect.value = String(previousCount);
+        gameState.impostorCount = previousCount;
+    }
+
+    goToPlayerSetup();
+}
+
 function resetGame() {
     gameState.players = [];
     gameState.category = '';
