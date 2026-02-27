@@ -135,6 +135,7 @@ function initializeCategories() {
 
 function showWordScreen() {
     showScreen('wordScreen');
+    resetWordScreen();
     showCurrentPlayerWord();
 }
 
