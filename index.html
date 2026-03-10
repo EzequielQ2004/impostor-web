@@ -28,12 +28,22 @@
         <div id="rulesScreen" class="screen">
             <h2>Reglas del Juego</h2>
             <div class="rules-box">
-                <p>1. Todos reciben una palabra secreta, excepto los impostores.</p>
-                <p>2. Cada jugador dice una pista sobre su palabra sin decirla directamente.</p>
-                <p>3. El impostor debe improvisar para no ser descubierto.</p>
-                <p>4. Al final, el grupo vota quien cree que es el impostor.</p>
-                <p>5. Si descubren al impostor, ganan los civiles; si no, gana el impostor.</p>
+                <p><strong>1.</strong> Todos reciben una palabra secreta, excepto los impostores.</p>
+                <p><strong>2.</strong> Cada jugador dice una pista sobre su palabra sin decirla directamente.</p>
+                <p><strong>3.</strong> El impostor debe improvisar para no ser descubierto.</p>
+                <p><strong>4.</strong> Al final, el grupo vota quien cree que es el impostor.</p>
+                <p><strong>5.</strong> Si descubren al impostor, ganan los civiles; si no, gana el impostor.</p>
             </div>
+
+            <h3 style="margin-top: 25px; color: #ffd54f;">Modos de Juego</h3>
+            <div class="rules-box">
+                <p><strong style="color: #ff9800;">🔶 Palabra Cercana:</strong></p>
+                <p style="margin-left: 20px;">Algunos jugadores reciben una palabra similar (pero no idéntica) a la principal. Por ejemplo: si la palabra principal es "pizza", la cercana podría ser "empanada". Esto crea confusión adicional porque todos creen tener la misma palabra, pero algunas pistas no encajan perfectamente.</p>
+
+                <p style="margin-top: 15px;"><strong style="color: #3ab5ff;">🔷 Palabras Personalizadas:</strong></p>
+                <p style="margin-left: 20px;">En lugar de usar categorías predefinidas, tú escribes las palabras que quieres usar. Perfecto para jugar con temas específicos que conozcas con tus amigos (ej: compañeros de trabajo, lugares de tu ciudad, inside jokes).</p>
+            </div>
+
             <div class="menu-actions">
                 <button class="btn" onclick="showScreen('menuScreen')">Volver al Menu</button>
                 <button class="btn btn-success" onclick="goToPlayerSetup()">Continuar</button>
@@ -66,24 +76,104 @@
         <div id="categorySetupScreen" class="screen">
             <h2>Paso 2: Elegir Categoria</h2>
 
-            <h3>Selecciona una categoria:</h3>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <h3 style="margin-bottom: 0;">Selecciona una categoria:</h3>
+                <button class="btn btn-info-small" onclick="showCustomWordsInfo()" title="¿Qué es el modo personalizado?">?</button>
+            </div>
             <div class="category-options" id="categoryOptions"></div>
+
+            <!-- Sección de categorías personalizadas (aparece solo en modo personalizado) -->
+            <div id="customCategorySection" style="display: none; margin-top: 20px;">
+
+                <!-- Botón para móviles: Abrir modal de categorías -->
+                <div class="mobile-category-trigger" style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-manage-categories" onclick="openMobileCategoryModal()">
+                        📁 Gestionar Mis Categorias
+                    </button>
+                </div>
+
+                <!-- Contenido desktop (oculto en móviles) -->
+                <div class="desktop-category-content">
+
+                <!-- Botón para crear nueva categoría (visible cuando no se está creando/editando) -->
+                <div id="createCategoryButtonSection" style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-success" onclick="showCreateCategoryForm()">+ Crear Nueva Categoria</button>
+                </div>
+
+                <!-- Formulario para crear/editar categoría (inicialmente oculto) -->
+                <div id="createCategoryForm" style="display: none; padding: 20px; background-color: var(--panel-soft); border-radius: 10px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 id="categoryFormTitle">Crear Nueva Categoria</h3>
+                        <button class="btn btn-danger btn-small" onclick="cancelEditCategory()">Cancelar</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newCategoryName">Nombre de la categoria:</label>
+                        <input type="text" id="newCategoryName" placeholder="Ej: Personajes de Marvel">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Agregar palabras a la categoria:</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" id="newWordNormal" placeholder="Palabra principal (ej: Iron Man)" style="flex: 1;">
+                            <input type="text" id="newWordClose" placeholder="Palabra cercana opcional (ej: Batman)" style="flex: 1;">
+                            <button class="btn" onclick="addWordToCategory()" style="margin: 0;">Agregar</button>
+                        </div>
+                    </div>
+
+                    <div id="customWordsList" class="custom-words-list">
+                        <p style="color: #9dd6ff; text-align: center;">No hay palabras agregadas aun</p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn btn-success" onclick="saveCustomCategory()">Guardar Categoria</button>
+                        <button class="btn" onclick="clearCategoryForm()">Limpiar</button>
+                    </div>
+                </div>
+
+                <!-- Categorías guardadas -->
+                <div style="padding: 20px; background-color: var(--panel-soft); border-radius: 10px;">
+                    <h3>Tus Categorias Guardadas</h3>
+                    <div id="savedCategoriesList" class="saved-categories-list">
+                        <p style="color: #9dd6ff; text-align: center;">No tienes categorias guardadas</p>
+                    </div>
+                    <p style="color: #9dd6ff; font-size: 14px; margin-top: 10px;">
+                        ℹ️ Las categorias se guardan en este dispositivo y se perderan si borras los datos del navegador.
+                    </p>
+                </div>
+                </div><!-- /.desktop-category-content -->
+            </div>
 
             <div class="step-actions">
                 <button class="btn" onclick="showScreen('playerSetupScreen')">Atras</button>
-                <button class="btn btn-success" onclick="goToImpostorSetup()">Siguiente: Impostores</button>
+                <button class="btn btn-success" onclick="goToImpostorSetup()">Siguiente: Roles Especiales</button>
             </div>
         </div>
 
         <!-- Paso 3: Impostores -->
         <div id="impostorSetupScreen" class="screen">
-            <h2>Paso 3: Cantidad de Impostores</h2>
+            <h2>Paso 3: Roles Especiales</h2>
 
             <div class="form-group">
-                <label for="impostorCount">Numero de impostores:</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="impostorCount" style="margin-bottom: 0;">Numero de impostores:</label>
+                    <button class="btn btn-info-small" onclick="showImpostorInfo()" title="¿Qué es un impostor?">?</button>
+                </div>
                 <select id="impostorCount">
                     <option value="1">1 impostor</option>
                     <option value="2">2 impostores</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="closeWordCount" style="margin-bottom: 0;">Jugadores con palabra cercana:</label>
+                    <button class="btn btn-info-small" onclick="showCloseWordInfo()" title="¿Qué es palabra cercana?">?</button>
+                </div>
+                <select id="closeWordCount">
+                    <option value="0">0 (solo impostores)</option>
+                    <option value="1">1 jugador</option>
+                    <option value="2">2 jugadores</option>
                 </select>
             </div>
 
@@ -129,6 +219,73 @@
         </div>
     </div>
 
+    <!-- Modal de Información -->
+    <div id="infoModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeInfoModal()">&times;</span>
+            <h2 id="modalTitle">Título</h2>
+            <div id="modalContent" class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Modal para gestión de categorías en móviles -->
+    <div id="mobileCategoryModal" class="modal mobile-category-modal" style="display: none;">
+        <div class="modal-content mobile-modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
+                <h2 style="margin: 0; color: var(--brand-blue);">Mis Categorías</h2>
+                <button class="btn btn-danger btn-small" onclick="closeMobileCategoryModal()">Cerrar</button>
+            </div>
+
+            <!-- Contenido del modal (se clona desde customCategorySection) -->
+            <div id="mobileCategoryContent" class="mobile-category-content">
+                <!-- Botón para crear nueva categoría -->
+                <div id="mobileCreateCategoryButtonSection" style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-success" onclick="showMobileCreateCategoryForm()">+ Crear Nueva Categoria</button>
+                </div>
+
+                <!-- Formulario para crear/editar categoría -->
+                <div id="mobileCreateCategoryForm" style="display: none; padding: 15px; background-color: var(--panel-soft); border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4 id="mobileCategoryFormTitle" style="margin: 0;">Crear Nueva Categoria</h4>
+                        <button class="btn btn-danger btn-small" onclick="cancelMobileEditCategory()">Cancelar</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobileNewCategoryName">Nombre de la categoria:</label>
+                        <input type="text" id="mobileNewCategoryName" placeholder="Ej: Personajes de Marvel">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Agregar palabras:</label>
+                        <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                            <input type="text" id="mobileNewWordNormal" placeholder="Palabra principal" style="flex: 1; min-width: 120px;">
+                            <input type="text" id="mobileNewWordClose" placeholder="Palabra cercana (opcional)" style="flex: 1; min-width: 120px;">
+                            <button class="btn" onclick="addWordToMobileCategory()" style="margin: 0;">Agregar</button>
+                        </div>
+                    </div>
+
+                    <div id="mobileCustomWordsList" class="custom-words-list" style="max-height: 150px;">
+                        <p style="color: #9dd6ff; text-align: center; font-size: 14px;">No hay palabras agregadas aun</p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn btn-success" onclick="saveMobileCustomCategory()">Guardar Categoria</button>
+                        <button class="btn" onclick="clearMobileCategoryForm()">Limpiar</button>
+                    </div>
+                </div>
+
+                <!-- Categorías guardadas -->
+                <div style="padding: 15px; background-color: var(--panel-soft); border-radius: 10px;">
+                    <h4 style="margin-bottom: 10px;">Tus Categorias Guardadas</h4>
+                    <div id="mobileSavedCategoriesList" class="saved-categories-list" style="max-height: 250px; overflow-y: auto;">
+                        <p style="color: #9dd6ff; text-align: center; font-size: 14px;">No tienes categorias guardadas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>

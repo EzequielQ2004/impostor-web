@@ -251,6 +251,97 @@ select:focus {
     text-transform: uppercase;
 }
 
+.custom-words-list {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.custom-word-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.custom-word-item:last-child {
+    border-bottom: none;
+}
+
+.custom-word-item .word-pair {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.custom-word-item .word-main {
+    font-weight: bold;
+    color: #9edbff;
+}
+
+.custom-word-item .word-close {
+    color: #ff9800;
+    font-size: 14px;
+}
+
+.custom-word-item .word-close::before {
+    content: '↔ ';
+}
+
+.saved-categories-list {
+    margin-top: 15px;
+}
+
+.saved-category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: rgba(58, 181, 255, 0.1);
+    border: 1px solid rgba(58, 181, 255, 0.3);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.saved-category-item:hover {
+    background-color: rgba(58, 181, 255, 0.2);
+}
+
+.saved-category-item .category-name {
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+.saved-category-item .word-count {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-left: 10px;
+}
+
+.saved-category-item .category-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    margin: 0;
+}
+
+.close-word-label {
+    color: #ff9800;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 15px;
+    text-transform: uppercase;
+}
+
 .order-list {
     background-color: var(--panel-soft);
     border-radius: 10px;
@@ -296,6 +387,168 @@ select:focus {
     font-size: 20px;
     margin-bottom: 20px;
     color: #fbd4db;
+}
+
+.btn-info-small {
+    background-color: #3ab5ff;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-info-small:hover {
+    background-color: #1f82d8;
+    transform: scale(1.1);
+}
+
+/* Modal de información */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--panel-bg);
+    border: 1px solid rgba(58, 181, 255, 0.5);
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+.modal-body {
+    margin-top: 15px;
+    line-height: 1.6;
+    color: var(--text-soft);
+}
+
+.modal-body strong {
+    color: var(--text-main);
+}
+
+.modal-body ul {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.modal-body li {
+    margin-bottom: 8px;
+}
+
+/* Modal de categorías para móviles */
+.mobile-category-modal .mobile-modal-content {
+    max-width: 95%;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.mobile-category-content {
+    max-height: calc(90vh - 80px);
+    overflow-y: auto;
+}
+
+/* En desktop, ocultar el botón de abrir modal móvil */
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+/* En móviles, ajustar el modal */
+@media (max-width: 768px) {
+    .mobile-category-modal .mobile-modal-content {
+        margin: 10px;
+        padding: 15px;
+        max-height: 95vh;
+    }
+
+    .mobile-category-content {
+        max-height: calc(95vh - 70px);
+    }
+
+    /* Ocultar solo el contenido desktop en móviles, no el botón trigger */
+    .desktop-category-content {
+        display: none !important;
+    }
+
+    /* Mostrar botón para abrir modal en móviles */
+    .mobile-category-trigger {
+        display: block !important;
+        margin: 15px 0;
+        text-align: center;
+    }
+
+    /* Asegurar que customCategorySection sea visible cuando se necesite */
+    #customCategorySection {
+        display: block !important;
+    }
+}
+
+/* Por defecto, ocultar el botón de trigger en desktop */
+.mobile-category-trigger {
+    display: none;
+}
+
+/* Botón para abrir categorías en móviles */
+.btn-manage-categories {
+    background-color: #3a5a9c;
+    color: white;
+    border: 2px dashed rgba(58, 181, 255, 0.5);
+    padding: 15px 30px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.btn-manage-categories:hover {
+    background-color: #4a6aac;
+    border-color: var(--brand-blue);
+}
+
+/* Ajustes para inputs en móvil */
+@media (max-width: 768px) {
+    #mobileNewWordNormal,
+    #mobileNewWordClose {
+        font-size: 16px; /* Prevenir zoom en iOS */
+    }
 }
 
 @keyframes fadeIn {
